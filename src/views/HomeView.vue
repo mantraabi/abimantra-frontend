@@ -3,7 +3,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
 // Import Komponen
-import NavBar from '../components/NavBar.vue'
+import NavBar from '../components/Navbar.vue'
 import HeroSection from '../components/HeroSection.vue'
 import SectionLabel from '../components/SectionLabel.vue'
 import FeaturedProject from '../components/FeaturedProject.vue'
