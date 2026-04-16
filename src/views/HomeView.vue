@@ -19,6 +19,20 @@ const isLoading = ref(true)
 
 const API_URL = 'https://api.abimantra.my.id/api'
 
+// Fungsi membaiki format Tech Stack
+const formatTechStack = (tech) => {
+  if (!tech) return []
+  if (Array.isArray(tech)) return tech
+  
+  try {
+    const parsed = JSON.parse(tech)
+    if (typeof parsed === 'string') return JSON.parse(parsed)
+    return Array.isArray(parsed) ? parsed : [parsed]
+  } catch (error) {
+    return tech.replace(/[\[\]"']/g, '').split(',').map(s => s.trim())
+  }
+}
+
 // Fetch Data
 const fetchData = async () => {
   try {
@@ -62,8 +76,10 @@ onMounted(() => {
           badge="Proyek Utama"
           :title="featuredProject.title"
           :description="featuredProject.description"
-          :techStack="featuredProject.tech_stack ? JSON.parse(featuredProject.tech_stack) : []"
-          :imageUrl="featuredProject.image_url"  :demoUrl="featuredProject.demo_url"    />
+          :techStack="formatTechStack(featuredProject.tech_stack)"
+          :imageUrl="featuredProject.image_url"  
+          :demoUrl="featuredProject.demo_url"    
+        />
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           <ProjectCard 
@@ -72,7 +88,6 @@ onMounted(() => {
             :title="project.title"
             :description="project.description"
           />
-          
         </div>
       </section>
 
@@ -89,7 +104,8 @@ onMounted(() => {
             :category="article.category"
             :title="article.title"
             :description="article.excerpt"
-            :imageUrl="article.image_url" :link="`/artikel/${article.slug}`"
+            :imageUrl="article.image_url" 
+            :link="`/artikel/${article.slug}`"
           />
         </div>
       </section>
@@ -100,7 +116,7 @@ onMounted(() => {
 
   <footer class="py-10 border-t border-brand-border mt-16 text-center text-brand-muted text-sm">
     <div class="max-w-[1000px] mx-auto px-6">
-      <p>&copy; 2026 abimantra.my.id</p>
+      <p>&copy; 2026 All rights reserved. Dikembangkan oleh <a href="https://abimantra.my.id" class="text-brand-main font-semibold hover:text-brand-accent transition-colors">abimantra.my.id</a></p>
     </div>
   </footer>
 </template>
