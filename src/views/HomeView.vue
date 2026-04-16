@@ -17,7 +17,7 @@ const otherProjects = ref([])
 const articles = ref([])
 const isLoading = ref(true)
 
-const API_URL = 'http://localhost:3000/api'
+const API_URL = 'https://api.abimantra.my.id/api'
 
 // Fetch Data
 const fetchData = async () => {

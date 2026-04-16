@@ -15,7 +15,7 @@ const handleLogin = async () => {
   errorMessage.value = ''
   
   try {
-    const response = await axios.post('http://localhost:3000/api/auth/login', {
+    const response = await axios.post('https://api.abimantra.my.id/api/auth/login', {
       username: username.value,
       password: password.value
     })

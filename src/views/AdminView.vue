@@ -5,7 +5,7 @@ import axios from 'axios'
 
 const router = useRouter() // Inisialisasi router
 
-const API_URL = 'http://localhost:3000/api'
+const API_URL = 'https://api.abimantra.my.id/api'
 const activeTab = ref('proyek') // 'proyek' atau 'artikel'
 
 // State untuk Form
