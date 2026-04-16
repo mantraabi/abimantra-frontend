@@ -20,7 +20,7 @@
         <a href="mailto:devabimantra@gmail.com" class="w-full md:w-auto px-10 py-4 bg-brand-accent hover:bg-brand-hover text-white rounded-2xl font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-blue-500/25 hover:-translate-y-1">
           Kirim Email
         </a>
-        <a href="#" class="w-full md:w-auto px-10 py-4 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-bold text-lg backdrop-blur-md transition-all duration-300 border border-white/10">
+        <a href="https://t.me/mantraabi" class="w-full md:w-auto px-10 py-4 bg-white/10 hover:bg-white/20 text-white rounded-2xl font-bold text-lg backdrop-blur-md transition-all duration-300 border border-white/10">
           Telegram Saya
         </a>
       </div>

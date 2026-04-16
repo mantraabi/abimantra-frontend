@@ -100,7 +100,7 @@ onMounted(() => {
 
   <footer class="py-10 border-t border-brand-border mt-16 text-center text-brand-muted text-sm">
     <div class="max-w-[1000px] mx-auto px-6">
-      <p>&copy; 2026 abimantra.my.id. Dibangun dengan Node.js & Vue + Tailwind CSS.</p>
+      <p>&copy; 2026 abimantra.my.id</p>
     </div>
   </footer>
 </template>
