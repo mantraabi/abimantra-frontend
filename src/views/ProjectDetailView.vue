@@ -23,7 +23,6 @@ const formatTechStack = (tech) => {
   }
 }
 
-// Fungsi aman untuk mengambil data galeri
 const getGallery = (galleryStr) => {
   if (!galleryStr) return []
   try {
@@ -41,7 +40,16 @@ onMounted(async () => {
     
     if (foundProject) {
       project.value = foundProject
+      
       document.title = `${foundProject.title} | abimantra.my.id`
+      
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+
+        const descText = foundProject.short_description || foundProject.description.substring(0, 150) + '...';
+        metaDesc.setAttribute('content', descText);
+      }
+      
     } else {
       router.push('/')
     }
@@ -94,7 +102,7 @@ onMounted(async () => {
         <h3 class="text-2xl font-bold text-brand-main mb-6">Galeri Aplikasi</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div v-for="(img, idx) in getGallery(project.gallery)" :key="idx" class="rounded-2xl overflow-hidden border border-brand-border shadow-sm hover:shadow-md transition-shadow">
-            <img :src="img" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" :alt="`Galeri ${project.title} ${idx + 1}`" />
+            <img :src="img" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" :alt="`Galeri ${project.title} ${idx + 1}`" />
           </div>
         </div>
       </section>

@@ -15,7 +15,8 @@ defineProps({
     
     <div v-if="imageUrl" class="lg:w-[45%] relative overflow-hidden bg-gray-100 border-r border-brand-border/50">
       <img 
-        :src="imageUrl" 
+        :src="imageUrl"
+        loading="lazy"
         :alt="`Tangkapan layar dari aplikasi ${title}`" 
         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 min-h-[250px] lg:min-h-full"
       />
