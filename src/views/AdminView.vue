@@ -46,15 +46,17 @@ const fetchData = async () => {
   }
 }
 
-// Handler Simpan Proyek (Dilindungi Token)
+// simpan proyek baru (Dilindungi Token)
 const saveProject = async () => {
   try {
     const slug = projectForm.value.title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-')
     
     const payload = { 
       ...projectForm.value, 
+      slug: slug, // 👉 INI YANG KURANG! Tambahkan baris ini
       tech_stack: JSON.stringify(projectForm.value.tech_stack.split(',').map(s => s.trim())) 
     }
+    
     // Sisipkan getAuthHeaders() agar backend mengizinkan akses
     await axios.post(`${API_URL}/projects`, payload, getAuthHeaders())
     
@@ -67,7 +69,7 @@ const saveProject = async () => {
       alert('Sesi Anda telah habis. Silakan login kembali.')
       handleLogout()
     } else {
-      alert('Gagal simpan proyek') 
+      alert('Gagal simpan proyek: ' + (err.response?.data?.error || err.message)) 
     }
   }
 }
