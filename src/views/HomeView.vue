@@ -9,6 +9,8 @@ import FeaturedProject from '../components/FeaturedProject.vue'
 import ProjectCard from '../components/ProjectCard.vue'
 import ArticleCard from '../components/ArticleCard.vue'
 import ContactSection from '../components/ContactSection.vue'
+import StatsSection from '../components/StatsSection.vue'
+import ServicesSection from '../components/ServicesSection.vue'
 
 const featuredProject = ref(null)
 const otherProjects = ref([])
@@ -88,6 +90,11 @@ onMounted(() => {
           />
         </div>
       </section>
+      
+      <StatsSection />
+      
+      <ServicesSection />
+      
 
       <section id="artikel" class="py-16">
         <SectionLabel title="Catatan Pengembangan" />
