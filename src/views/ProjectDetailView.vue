@@ -29,14 +29,14 @@ onMounted(async () => {
     // Ambil semua proyek dari API
     const res = await axios.get(`${API_URL}/projects`)
     
-    // Cari proyek yang ID-nya sama dengan parameter URL
-    const foundProject = res.data.find(p => p.slug === parseInt(route.params.slug))
+    // Cari proyek yang SLUG-nya sama dengan parameter URL (Tanpa parseInt)
+    const foundProject = res.data.find(p => p.slug === route.params.slug)
     
     if (foundProject) {
       project.value = foundProject
       document.title = `${foundProject.title} | abimantra.my.id`
     } else {
-      // Jika ID tidak ditemukan, kembalikan ke beranda
+      // Jika slug tidak ditemukan, kembalikan ke beranda
       router.push('/')
     }
   } catch (error) {
@@ -91,8 +91,35 @@ onMounted(async () => {
         </a>
       </div>
 
+      <section v-if="project.gallery" class="mt-12">
+    <h3 class="text-xl font-bold text-brand-main mb-6">Galeri Proyek</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div v-for="(img, index) in JSON.parse(project.gallery)" :key="index" class="rounded-2xl overflow-hidden border border-brand-border">
+        <img :src="img" class="w-full h-auto hover:scale-105 transition-transform duration-500" alt="Gallery image">
+      </div>
+    </div>
+  </section>
+
+  <section class="mt-16 p-8 bg-gray-50 rounded-3xl border border-dashed border-brand-border">
+    <h3 class="text-xl font-bold text-brand-main mb-2">Tertarik dengan proyek ini?</h3>
+    <p class="text-brand-muted mb-6">Saya tersedia untuk pemasangan, kustomisasi, atau diskusi teknis lebih lanjut.</p>
+    <div class="flex flex-wrap gap-4">
+      <a href="https://t.me/abimantra" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold flex items-center gap-2">
+        Telegram Saya
+      </a>
+      <a href="mailto:devabimantra@gmail.com" class="px-6 py-3 border border-brand-border rounded-xl font-bold">
+        Email
+      </a>
+    </div>
+  </section>
+
     </div>
   </main>
+  <footer class="py-10 border-t border-brand-border mt-16 text-center text-brand-muted text-sm">
+    <div class="max-w-[1000px] mx-auto px-6">
+      <p>&copy; 2026 All rights reserved. <a href="https://abimantra.my.id" class="text-brand-main font-semibold hover:text-brand-accent transition-colors">abimantra.my.id</a></p>
+    </div>
+  </footer>
 </template>
 
 <style scoped>

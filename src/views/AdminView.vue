@@ -1,15 +1,15 @@
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router' // Tambahan untuk navigasi Logout
+import { useRouter } from 'vue-router' 
 import axios from 'axios'
 
-const router = useRouter() // Inisialisasi router
+const router = useRouter() 
 
 const API_URL = 'https://api.abimantra.my.id/api'
-const activeTab = ref('proyek') // 'proyek' atau 'artikel'
+const activeTab = ref('proyek') 
 
-// State untuk Form
-const projectForm = ref({ title: '', description: '', tech_stack: '', image_url: '', demo_url: '', is_featured: false })
+// State untuk Form (Sudah ditambahkan short_description dan gallery)
+const projectForm = ref({ title: '', short_description: '', description: '', tech_stack: '', image_url: '', demo_url: '', gallery: '', is_featured: false })
 const articleForm = ref({ title: '', category: '', excerpt: '', content: '', image_url: '' })
 
 // State untuk List Data
@@ -17,19 +17,23 @@ const projects = ref([])
 const articles = ref([])
 const isLoading = ref(false)
 
+// State untuk Mode Edit
+const isEditMode = ref(false);
+const currentId = ref(null);
+
 // 1. Fungsi Logout
 const handleLogout = () => {
-  localStorage.removeItem('admin_token') // Hapus token dari browser
-  router.push('/login') // Kembali ke halaman login
+  localStorage.removeItem('admin_token') 
+  router.push('/login') 
 }
 
-// 2. Fungsi untuk mengambil Token saat mengirim data
+// 2. Fungsi Token
 const getAuthHeaders = () => {
   const token = localStorage.getItem('admin_token')
   return { headers: { Authorization: `Bearer ${token}` } }
 }
 
-// Fungsi Ambil Data (Public, tidak butuh token)
+// Fungsi Ambil Data 
 const fetchData = async () => {
   isLoading.value = true
   try {
@@ -46,35 +50,64 @@ const fetchData = async () => {
   }
 }
 
-// simpan proyek baru (Dilindungi Token)
+// Fungsi Batal Edit
+const cancelEdit = () => {
+  isEditMode.value = false;
+  currentId.value = null;
+  projectForm.value = { title: '', short_description: '', description: '', tech_stack: '', image_url: '', demo_url: '', gallery: '', is_featured: false };
+}
+
+// Fungsi Tarik Data ke Form (Saat Tombol Edit Ditekan)
+const editProject = (project) => {
+  isEditMode.value = true;
+  currentId.value = project.id;
+  activeTab.value = 'proyek';
+  
+  // Isi form dengan data yang ada
+  projectForm.value = {
+    title: project.title,
+    short_description: project.short_description || '',
+    description: project.description,
+    tech_stack: Array.isArray(JSON.parse(project.tech_stack)) ? JSON.parse(project.tech_stack).join(', ') : project.tech_stack,
+    image_url: project.image_url,
+    demo_url: project.demo_url,
+    gallery: project.gallery ? JSON.parse(project.gallery).join(', ') : '',
+    is_featured: project.is_featured
+  };
+};
+
+// Fungsi Simpan (Buat Baru ATAU Update)
 const saveProject = async () => {
   try {
-    const slug = projectForm.value.title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-')
-    
+    const slug = projectForm.value.title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-');
     const payload = { 
       ...projectForm.value, 
-      slug: slug, // 👉 INI YANG KURANG! Tambahkan baris ini
-      tech_stack: JSON.stringify(projectForm.value.tech_stack.split(',').map(s => s.trim())) 
+      slug,
+      tech_stack: JSON.stringify(projectForm.value.tech_stack ? projectForm.value.tech_stack.split(',').map(s => s.trim()) : []),
+      gallery: JSON.stringify(projectForm.value.gallery ? projectForm.value.gallery.split(',').map(s => s.trim()) : [])
+    };
+
+    if (isEditMode.value) {
+      await axios.put(`${API_URL}/projects/${currentId.value}`, payload, getAuthHeaders());
+      alert('Proyek berhasil diperbarui!');
+    } else {
+      await axios.post(`${API_URL}/projects`, payload, getAuthHeaders());
+      alert('Proyek berhasil ditambahkan!');
     }
-    
-    // Sisipkan getAuthHeaders() agar backend mengizinkan akses
-    await axios.post(`${API_URL}/projects`, payload, getAuthHeaders())
-    
-    alert('Proyek berhasil ditambahkan!')
-    projectForm.value = { title: '', description: '', tech_stack: '', image_url: '', demo_url: '', is_featured: false }
-    fetchData()
+
+    cancelEdit(); // Reset form setelah sukses
+    fetchData();  // Refresh data
   } catch (err) { 
-    // Deteksi jika token salah / kedaluwarsa
     if(err.response?.status === 401 || err.response?.status === 403) {
       alert('Sesi Anda telah habis. Silakan login kembali.')
       handleLogout()
     } else {
-      alert('Gagal simpan proyek: ' + (err.response?.data?.error || err.message)) 
+      alert('Gagal simpan data: ' + (err.response?.data?.error || err.message)) 
     }
   }
-}
+};
 
-// Handler Terbit Artikel (Dilindungi Token)
+// Handler Terbit Artikel 
 const saveArticle = async () => {
   try {
     const slug = articleForm.value.title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-')
@@ -83,14 +116,12 @@ const saveArticle = async () => {
       slug,
       publish_date: new Date().toLocaleDateString('id-ID', { day:'numeric', month:'long', year:'numeric' })
     }
-    // Sisipkan getAuthHeaders() agar backend mengizinkan akses
     await axios.post(`${API_URL}/articles`, payload, getAuthHeaders())
     
     alert('Artikel berhasil diterbitkan!')
     articleForm.value = { title: '', category: '', excerpt: '', content: '', image_url: '' }
     fetchData()
   } catch (err) { 
-    // Deteksi jika token salah / kedaluwarsa
     if(err.response?.status === 401 || err.response?.status === 403) {
       alert('Sesi Anda telah habis. Silakan login kembali.')
       handleLogout()
@@ -158,13 +189,6 @@ onMounted(fetchData)
           </h1>
           <p class="text-brand-muted text-sm">Kelola konten portofolio dan blog Anda di sini.</p>
         </div>
-        <div class="flex items-center gap-3 bg-white p-1.5 rounded-2xl border border-brand-border shadow-sm">
-          <div class="w-10 h-10 rounded-xl bg-brand-accent flex items-center justify-center text-white font-bold text-sm">A</div>
-          <div class="pr-4">
-            <p class="text-xs font-bold text-brand-main leading-none">Abimantra Admin</p>
-            <p class="text-[10px] text-brand-muted">Superuser</p>
-          </div>
-        </div>
       </header>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -173,7 +197,7 @@ onMounted(fetchData)
           <section class="bg-white rounded-3xl border border-brand-border shadow-sm p-8">
             <h3 class="text-lg font-bold mb-6 flex items-center gap-2 text-brand-main">
               <span class="w-1.5 h-6 bg-brand-accent rounded-full"></span>
-              {{ activeTab === 'proyek' ? 'Tambah Proyek Baru' : 'Tulis Artikel Baru' }}
+              {{ activeTab === 'proyek' ? (isEditMode ? 'Edit Proyek' : 'Tambah Proyek Baru') : 'Tulis Artikel Baru' }}
             </h3>
 
             <form v-if="activeTab === 'proyek'" @submit.prevent="saveProject" class="space-y-5">
@@ -188,10 +212,15 @@ onMounted(fetchData)
                 </div>
               </div>
 
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold uppercase text-brand-muted">Deskripsi Singkat (Maks 160 Karakter)</label>
+                <textarea v-model="projectForm.short_description" rows="2" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-accent" placeholder="Platform ujian modern..."></textarea>
+              </div>
+
               <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="space-y-1.5">
-                  <label class="text-xs font-bold uppercase text-brand-muted">URL Gambar Proyek</label>
-                  <input v-model="projectForm.image_url" type="text" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 focus:ring-2 focus:ring-brand-accent outline-none" placeholder="https://link-gambar.com/foto.jpg">
+                  <label class="text-xs font-bold uppercase text-brand-muted">URL Gambar Sampul</label>
+                  <input v-model="projectForm.image_url" type="text" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 focus:ring-2 focus:ring-brand-accent outline-none" placeholder="https://link.com/foto.jpg">
                 </div>
                 <div class="space-y-1.5">
                   <label class="text-xs font-bold uppercase text-brand-muted">URL Demo (Live)</label>
@@ -200,7 +229,12 @@ onMounted(fetchData)
               </div>
 
               <div class="space-y-1.5">
-                <label class="text-xs font-bold uppercase text-brand-muted">Deskripsi Lengkap</label>
+                <label class="text-xs font-bold uppercase text-brand-muted">Galeri Gambar (Pisahkan dengan koma)</label>
+                <textarea v-model="projectForm.gallery" rows="2" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-accent" placeholder="https://img1.jpg, https://img2.jpg"></textarea>
+              </div>
+
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold uppercase text-brand-muted">Deskripsi Lengkap (Cerita / Studi Kasus)</label>
                 <textarea v-model="projectForm.description" rows="4" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-accent" required></textarea>
               </div>
               
@@ -209,7 +243,14 @@ onMounted(fetchData)
                 <label for="is_featured" class="text-sm font-medium text-brand-main">Tampilkan sebagai Proyek Utama (Hero Section)</label>
               </div>
 
-              <button class="w-full py-4 bg-brand-main text-white font-bold rounded-xl hover:bg-black transition-all shadow-lg">Simpan Proyek</button>
+              <div class="flex gap-4">
+                <button type="submit" class="flex-1 py-4 bg-brand-main text-white font-bold rounded-xl hover:bg-black transition-all shadow-lg">
+                  {{ isEditMode ? 'Update Proyek' : 'Simpan Proyek' }}
+                </button>
+                <button v-if="isEditMode" type="button" @click="cancelEdit" class="px-8 py-4 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300 transition-all">
+                  Batal
+                </button>
+              </div>
             </form>
 
             <form v-else @submit.prevent="saveArticle" class="space-y-5">
@@ -252,13 +293,18 @@ onMounted(fetchData)
             
             <div v-else class="space-y-3">
               <div v-if="activeTab === 'proyek'">
-                <div v-for="p in projects" :key="p.id" class="p-3 border rounded-xl flex items-center justify-between group hover:bg-gray-50">
+                <div v-for="p in projects" :key="p.id" class="p-3 border rounded-xl flex items-center justify-between group hover:bg-gray-50 transition-colors">
                   <div class="overflow-hidden">
                     <p class="text-sm font-bold text-brand-main truncate">{{ p.title }}</p>
                     <p class="text-[10px] text-brand-muted italic">{{ p.is_featured ? 'Proyek Utama' : 'Portofolio' }}</p>
                   </div>
-                  <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>
+                  <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button @click="editProject(p)" class="p-1.5 text-blue-500 hover:bg-blue-100 rounded-lg transition-colors" title="Edit Proyek">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+                    </button>
+                    <button class="p-1.5 text-red-500 hover:bg-red-100 rounded-lg transition-colors" title="Hapus Proyek">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                    </button>
                   </div>
                 </div>
               </div>

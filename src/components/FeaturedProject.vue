@@ -39,7 +39,7 @@ defineProps({
         </h3>
         
         <p class="text-lg text-brand-muted max-w-[750px] mb-8 leading-relaxed">
-          {{ description }}
+          {{ shortDescription || description }} 
         </p>
         
         <div v-if="techStack && techStack.length" class="flex gap-3 flex-wrap mb-10 border-t border-brand-border/60 pt-8">
