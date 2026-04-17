@@ -49,6 +49,8 @@ const fetchData = async () => {
 // Handler Simpan Proyek (Dilindungi Token)
 const saveProject = async () => {
   try {
+    const slug = projectForm.value.title.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-')
+    
     const payload = { 
       ...projectForm.value, 
       tech_stack: JSON.stringify(projectForm.value.tech_stack.split(',').map(s => s.trim())) 

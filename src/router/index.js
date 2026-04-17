@@ -2,15 +2,21 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AdminView from '../views/AdminView.vue'
 import LoginView from '../views/LoginView.vue'
+import ProjectDetailView from '../views/ProjectDetailView.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
   { path: '/login', name: 'login', component: LoginView },
   { 
+    path: '/proyek/:slug',
+    name: 'project-detail', 
+    component: ProjectDetailView 
+  },
+  { 
     path: '/admin', 
     name: 'admin', 
     component: AdminView,
-    meta: { requiresAuth: true } // Menandai bahwa rute ini butuh autentikasi
+    meta: { requiresAuth: true }
   }
 ]
 

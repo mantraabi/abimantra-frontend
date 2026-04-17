@@ -75,17 +75,17 @@ onMounted(() => {
           v-if="featuredProject"
           badge="Proyek Utama"
           :title="featuredProject.title"
-          :description="featuredProject.description"
-          :techStack="formatTechStack(featuredProject.tech_stack)"
-          :imageUrl="featuredProject.image_url"  
-          :demoUrl="featuredProject.demo_url"    
+          :slug="featuredProject.slug" :description="featuredProject.description"
+          :tech-stack="formatTechStack(featuredProject.tech_stack)"
+          :image-url="featuredProject.image_url"
+          :demo-url="featuredProject.demo_url" 
         />
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           <ProjectCard 
             v-for="project in otherProjects" 
             :key="project.id"
-            :title="project.title"
+            :slug="project.slug" :title="project.title"
             :description="project.description"
           />
         </div>
@@ -116,7 +116,7 @@ onMounted(() => {
 
   <footer class="py-10 border-t border-brand-border mt-16 text-center text-brand-muted text-sm">
     <div class="max-w-[1000px] mx-auto px-6">
-      <p>&copy; 2026 All rights reserved. Dikembangkan oleh <a href="https://abimantra.my.id" class="text-brand-main font-semibold hover:text-brand-accent transition-colors">abimantra.my.id</a></p>
+      <p>&copy; 2026 All rights reserved. <a href="https://abimantra.my.id" class="text-brand-main font-semibold hover:text-brand-accent transition-colors">abimantra.my.id</a></p>
     </div>
   </footer>
 </template>
