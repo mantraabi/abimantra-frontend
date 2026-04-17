@@ -2,7 +2,6 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-// Import Komponen
 import NavBar from '../components/Navbar.vue'
 import HeroSection from '../components/HeroSection.vue'
 import SectionLabel from '../components/SectionLabel.vue'
@@ -11,7 +10,6 @@ import ProjectCard from '../components/ProjectCard.vue'
 import ArticleCard from '../components/ArticleCard.vue'
 import ContactSection from '../components/ContactSection.vue'
 
-// State Data
 const featuredProject = ref(null)
 const otherProjects = ref([])
 const articles = ref([])
@@ -19,11 +17,9 @@ const isLoading = ref(true)
 
 const API_URL = 'https://api.abimantra.my.id/api'
 
-// Fungsi membaiki format Tech Stack
 const formatTechStack = (tech) => {
   if (!tech) return []
   if (Array.isArray(tech)) return tech
-  
   try {
     const parsed = JSON.parse(tech)
     if (typeof parsed === 'string') return JSON.parse(parsed)
@@ -33,7 +29,6 @@ const formatTechStack = (tech) => {
   }
 }
 
-// Fetch Data
 const fetchData = async () => {
   try {
     const [projectsRes, articlesRes] = await Promise.all([
@@ -46,7 +41,7 @@ const fetchData = async () => {
     otherProjects.value = allProjects.filter(p => p.is_featured === false)
     articles.value = articlesRes.data
   } catch (error) {
-    console.error("Gagal mengambil data dari backend:", error)
+    console.error("Gagal mengambil data:", error)
   } finally {
     isLoading.value = false
   }
@@ -54,6 +49,7 @@ const fetchData = async () => {
 
 onMounted(() => {
   fetchData()
+  document.title = 'Abimantra.my.id | Web Developer & Portofolio'
 })
 </script>
 
@@ -75,18 +71,20 @@ onMounted(() => {
           v-if="featuredProject"
           badge="Proyek Utama"
           :title="featuredProject.title"
-          :slug="featuredProject.slug" :description="featuredProject.description"
-          :tech-stack="formatTechStack(featuredProject.tech_stack)"
-          :image-url="featuredProject.image_url"
-          :demo-url="featuredProject.demo_url" 
+          :slug="featuredProject.slug"
+          :description="featuredProject.short_description || featuredProject.description"
+          :techStack="formatTechStack(featuredProject.tech_stack)"
+          :imageUrl="featuredProject.image_url"  
+          :demoUrl="featuredProject.demo_url"    
         />
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
           <ProjectCard 
             v-for="project in otherProjects" 
             :key="project.id"
-            :slug="project.slug" :title="project.title"
-            :description="project.description"
+            :slug="project.slug"
+            :title="project.title"
+            :description="project.short_description || project.description"
           />
         </div>
       </section>

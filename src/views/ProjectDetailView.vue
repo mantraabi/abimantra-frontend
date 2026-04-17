@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import axios from 'axios'
-import NavBar from '../components/Navbar.vue' // Pastikan nama file sama persis
+import NavBar from '../components/Navbar.vue' 
 
 const route = useRoute()
 const router = useRouter()
@@ -11,7 +11,6 @@ const isLoading = ref(true)
 
 const API_URL = 'https://api.abimantra.my.id/api'
 
-// Fungsi format Tech Stack (sama seperti di Home)
 const formatTechStack = (tech) => {
   if (!tech) return []
   if (Array.isArray(tech)) return tech
@@ -24,19 +23,26 @@ const formatTechStack = (tech) => {
   }
 }
 
+// Fungsi aman untuk mengambil data galeri
+const getGallery = (galleryStr) => {
+  if (!galleryStr) return []
+  try {
+    const parsed = JSON.parse(galleryStr)
+    return Array.isArray(parsed) ? parsed : []
+  } catch (error) {
+    return []
+  }
+}
+
 onMounted(async () => {
   try {
-    // Ambil semua proyek dari API
     const res = await axios.get(`${API_URL}/projects`)
-    
-    // Cari proyek yang SLUG-nya sama dengan parameter URL (Tanpa parseInt)
     const foundProject = res.data.find(p => p.slug === route.params.slug)
     
     if (foundProject) {
       project.value = foundProject
       document.title = `${foundProject.title} | abimantra.my.id`
     } else {
-      // Jika slug tidak ditemukan, kembalikan ke beranda
       router.push('/')
     }
   } catch (error) {
@@ -50,7 +56,7 @@ onMounted(async () => {
 <template>
   <NavBar />
 
-  <main class="max-w-[800px] mx-auto px-6 py-20 min-h-screen">
+  <main class="max-w-[800px] mx-auto px-6 pt-36 pb-20 min-h-screen">
     
     <div v-if="isLoading" class="text-center py-20 text-brand-muted animate-pulse">
       Memuat detail proyek...
@@ -84,6 +90,15 @@ onMounted(async () => {
         {{ project.description }}
       </div>
 
+      <section v-if="getGallery(project.gallery).length > 0" class="mt-16 mb-12">
+        <h3 class="text-2xl font-bold text-brand-main mb-6">Galeri Aplikasi</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div v-for="(img, idx) in getGallery(project.gallery)" :key="idx" class="rounded-2xl overflow-hidden border border-brand-border shadow-sm hover:shadow-md transition-shadow">
+            <img :src="img" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" :alt="`Galeri ${project.title} ${idx + 1}`" />
+          </div>
+        </div>
+      </section>
+
       <div class="flex flex-wrap items-center gap-4 border-t border-brand-border pt-8">
         <a v-if="project.demo_url" :href="project.demo_url" target="_blank" rel="noopener noreferrer" 
            class="px-8 py-4 bg-brand-main text-white rounded-xl font-bold hover:bg-brand-accent hover:-translate-y-1 transition-all duration-300 shadow-md">
@@ -91,39 +106,30 @@ onMounted(async () => {
         </a>
       </div>
 
-      <section v-if="project.gallery" class="mt-12">
-    <h3 class="text-xl font-bold text-brand-main mb-6">Galeri Proyek</h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div v-for="(img, index) in JSON.parse(project.gallery)" :key="index" class="rounded-2xl overflow-hidden border border-brand-border">
-        <img :src="img" class="w-full h-auto hover:scale-105 transition-transform duration-500" alt="Gallery image">
-      </div>
-    </div>
-  </section>
-
-  <section class="mt-16 p-8 bg-gray-50 rounded-3xl border border-dashed border-brand-border">
-    <h3 class="text-xl font-bold text-brand-main mb-2">Tertarik dengan proyek ini?</h3>
-    <p class="text-brand-muted mb-6">Saya tersedia untuk pemasangan, kustomisasi, atau diskusi teknis lebih lanjut.</p>
-    <div class="flex flex-wrap gap-4">
-      <a href="https://t.me/abimantra" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold flex items-center gap-2">
-        Telegram Saya
-      </a>
-      <a href="mailto:devabimantra@gmail.com" class="px-6 py-3 border border-brand-border rounded-xl font-bold">
-        Email
-      </a>
-    </div>
-  </section>
+      <section class="mt-16 p-8 bg-gray-50 rounded-3xl border border-dashed border-brand-border text-center sm:text-left sm:flex items-center justify-between gap-6">
+        <div>
+          <h3 class="text-xl font-bold text-brand-main mb-2">Tertarik dengan sistem ini?</h3>
+          <p class="text-brand-muted text-sm mb-4 sm:mb-0">Saya siap membantu pemasangan, penyesuaian fitur, atau diskusi teknis lebih lanjut.</p>
+        </div>
+        <div class="flex flex-wrap gap-3 justify-center">
+          <a href="https://t.me/abimantra" target="_blank" class="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold text-sm hover:bg-blue-700 transition-colors whitespace-nowrap">
+            Telegram Saya
+          </a>
+        </div>
+      </section>
 
     </div>
   </main>
-  <footer class="py-10 border-t border-brand-border mt-16 text-center text-brand-muted text-sm">
+
+<footer class="py-10 border-t border-brand-border mt-16 text-center text-brand-muted text-sm">
     <div class="max-w-[1000px] mx-auto px-6">
       <p>&copy; 2026 All rights reserved. <a href="https://abimantra.my.id" class="text-brand-main font-semibold hover:text-brand-accent transition-colors">abimantra.my.id</a></p>
     </div>
   </footer>
+
 </template>
 
 <style scoped>
-/* Animasi Muncul Halus */
 .animate-fade-in-up {
   animation: fadeInUp 0.6s ease-out forwards;
 }
