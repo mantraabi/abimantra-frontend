@@ -11,6 +11,8 @@ import ArticleCard from '../components/ArticleCard.vue'
 import ContactSection from '../components/ContactSection.vue'
 import StatsSection from '../components/StatsSection.vue'
 import ServicesSection from '../components/ServicesSection.vue'
+import TestimonialSection from '../components/TestimonialSection.vue'
+import FAQSection from '../components/FAQSection.vue'
 
 const featuredProject = ref(null)
 const otherProjects = ref([])
@@ -19,16 +21,15 @@ const isLoading = ref(true)
 
 const API_URL = 'https://api.abimantra.my.id/api'
 
-const formatTechStack = (tech) => {
-  if (!tech) return []
-  if (Array.isArray(tech)) return tech
-  try {
-    const parsed = JSON.parse(tech)
-    if (typeof parsed === 'string') return JSON.parse(parsed)
-    return Array.isArray(parsed) ? parsed : [parsed]
-  } catch (error) {
-    return tech.replace(/[\[\]"']/g, '').split(',').map(s => s.trim())
-  }
+const formatTechStack = (data) => {
+  if (!data) return [];
+  
+  let strData = typeof data === 'string' ? data : JSON.stringify(data);
+  
+  // 👉 UBAH BARIS INI: Tambahkan \\ di dalam kurung siku Regex
+  let cleanStr = strData.replace(/[\[\]"\\]/g, '');
+  
+  return cleanStr.split(',').map(s => s.trim()).filter(s => s !== '');
 }
 
 const fetchData = async () => {
@@ -41,7 +42,8 @@ const fetchData = async () => {
     const allProjects = projectsRes.data;
     featuredProject.value = allProjects.find(p => p.is_featured === true)
     otherProjects.value = allProjects.filter(p => p.is_featured === false)
-    articles.value = articlesRes.data
+    articles.value = articlesRes.data.slice(0, 3)
+
   } catch (error) {
     console.error("Gagal mengambil data:", error)
   } finally {
@@ -80,40 +82,49 @@ onMounted(() => {
           :demoUrl="featuredProject.demo_url"    
         />
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-          <ProjectCard 
-            v-for="project in otherProjects" 
-            :key="project.id"
-            :slug="project.slug"
-            :title="project.title"
-            :description="project.short_description || project.description"
-          />
+        <div class="mt-12 text-center">
+          <router-link to="/proyek" class="inline-flex items-center gap-2 px-8 py-3 bg-white text-brand-main font-bold rounded-xl hover:bg-brand-main hover:text-white transition-all duration-300 border border-brand-border hover:border-brand-main shadow-sm">
+            Lihat Semua Portofolio
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </router-link>
         </div>
       </section>
       
       <StatsSection />
-      
       <ServicesSection />
+      <TestimonialSection />
+      <FAQSection />
       
 
-      <section id="artikel" class="py-16">
-        <SectionLabel title="Catatan Pengembangan" />
-        <div class="flex flex-col gap-4">
-          <div v-if="articles.length === 0" class="text-brand-muted italic">
-            Belum ada artikel yang dipublikasikan.
-          </div>
-          <ArticleCard 
-            v-for="article in articles"
-            :key="article.id"
-            :date="article.publish_date"
-            :category="article.category"
-            :title="article.title"
-            :description="article.excerpt"
-            :imageUrl="article.image_url" 
-            :link="`/artikel/${article.slug}`"
-          />
-        </div>
-      </section>
+            <section id="artikel" class="py-16">
+              <SectionLabel title="Catatan Pengembangan" />
+              <div class="flex flex-col gap-4">
+                <div v-if="articles.length === 0" class="text-brand-muted italic">
+                  Belum ada artikel yang dipublikasikan.
+                </div>
+                <ArticleCard 
+                  v-for="article in articles"
+                  :key="article.id"
+                  :date="article.publish_date"
+                  :category="article.category"
+                  :title="article.title"
+                  :description="article.excerpt"
+                  :imageUrl="article.image_url" 
+                  :link="`/artikel/${article.slug}`"
+                />
+              </div>
+              
+              <div v-if="articles.length > 0" class="mt-10 text-center">
+                <router-link to="/artikel" class="inline-flex items-center gap-2 px-8 py-3 bg-blue-50 text-brand-main font-bold rounded-xl hover:bg-brand-main hover:text-white transition-all duration-300 border border-blue-100 hover:border-brand-main">
+                  Lihat Semua Artikel
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </router-link>
+              </div>
+            </section>
     </div>
 
     <ContactSection />

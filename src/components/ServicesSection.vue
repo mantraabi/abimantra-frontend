@@ -4,30 +4,30 @@ const services = [
     title: 'Source Code',
     price: 'Rp 150k',
     period: '/ aplikasi',
-    description: 'Dapatkan akses penuh ke kode sumber aplikasi. Ideal bagi Anda yang ingin mempelajari struktur kode atau mengelola sistem secara mandiri.',
+    description: 'Dapatkan akses penuh ke kode sumber aplikasi. Ideal bagi sekolah yang memiliki tim IT/programmer mandiri.',
     features: ['Akses Full Source Code', 'Lisensi Penggunaan Mandiri', 'Struktur Kode Rapih (Vue/Node)', 'Update Versi Terbaru'],
     isPopular: false,
     buttonText: 'Beli Source Code',
     buttonLink: 'https://t.me/mantraabi'
   },
   {
-    title: 'Instalasi & Setup',
-    price: 'Rp 500k',
+    title: 'Jasa Instalasi',
+    price: 'Rp 200k',
     period: '/ pemasangan',
-    description: 'Terima beres. Saya bantu pasangkan di server (VPS) sekolah Anda hingga aplikasi siap digunakan oleh guru dan siswa.',
-    features: ['Setup VPS & aaPanel', 'Instalasi Aplikasi', 'Konfigurasi Domain/Subdomain', 'Training Admin'],
-    isPopular: true,
-    buttonText: 'Pesan Sekarang',
+    description: 'Anda sudah punya VPS sendiri? Kami bantu pasangkan aplikasi di server sekolah Anda sampai siap digunakan.',
+    features: ['Setup aaPanel', 'Instalasi Aplikasi', 'Konfigurasi Domain', 'Serah Terima (Handover) Sistem'],
+    isPopular: false,
+    buttonText: 'Pesan Instalasi',
     buttonLink: 'https://t.me/mantraabi'
   },
   {
-    title: 'Managed Server',
+    title: 'Paket Terima Beres',
     price: 'Mulai Rp 250k',
     period: '/ bulan',
-    description: 'Sekolah tidak perlu repot sewa server. Semua infrastruktur, maintenance, dan keamanan Saya yang urus sepenuhnya.',
-    features: ['Termasuk Cloud VPS', 'Backup Database Rutin', 'Prioritas Bantuan Teknis', 'Gratis Update Aplikasi'],
-    isPopular: false,
-    buttonText: 'Konsultasi Dulu',
+    description: 'Tidak mau repot urus server? Kami sediakan server cloud, urus keamanannya, dan Anda tinggal pakai aplikasinya.',
+    features: ['Termasuk Cloud Server (VPS)', 'Pemeliharaan & Backup Rutin', 'Tanggung Jawab Teknis Penuh', 'Bantuan Prioritas'],
+    isPopular: true,
+    buttonText: 'Konsultasi Sekarang',
     buttonLink: 'https://t.me/mantraabi'
   }
 ]
@@ -36,8 +36,8 @@ const services = [
 <template>
   <div class="py-16">
     <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-brand-main mb-4">Layanan & Kolaborasi</h2>
-      <p class="text-brand-muted max-w-2xl mx-auto">Pilih paket layanan yang paling sesuai dengan kebutuhan instansi Anda. Saya hadir untuk membantu digitalisasi sekolah Anda.</p>
+      <h2 class="text-3xl md:text-4xl font-extrabold text-brand-main mb-4">Pilihan Layanan</h2>
+      <p class="text-brand-muted max-w-2xl mx-auto">Pilih skema kerja sama yang paling sesuai dengan kesiapan infrastruktur dan tim di sekolah Anda.</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -49,7 +49,7 @@ const services = [
         </div>
 
         <h3 :class="['text-xl font-bold mb-2', svc.isPopular ? 'text-white' : 'text-brand-main']">{{ svc.title }}</h3>
-        <p :class="['text-sm mb-6 min-h-[60px]', svc.isPopular ? 'text-blue-100' : 'text-brand-muted']">{{ svc.description }}</p>
+        <p :class="['text-sm mb-6 min-h-[70px]', svc.isPopular ? 'text-blue-100' : 'text-brand-muted']">{{ svc.description }}</p>
         
         <div class="mb-8">
           <span :class="['text-4xl font-extrabold', svc.isPopular ? 'text-brand-accent' : 'text-brand-main']">{{ svc.price }}</span>
