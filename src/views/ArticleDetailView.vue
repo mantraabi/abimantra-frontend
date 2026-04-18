@@ -73,9 +73,7 @@ onMounted(async () => {
         <img :src="article.image_url" :alt="article.title" class="w-full h-full object-cover" />
       </div>
 
-      <div class="prose prose-lg prose-blue max-w-none text-brand-muted leading-relaxed whitespace-pre-line">
-        {{ article.content }}
-      </div>
+      <div class="prose prose-lg prose-blue max-w-none text-brand-muted leading-relaxed" v-html="article.content"></div>
 
     </article>
   </main>

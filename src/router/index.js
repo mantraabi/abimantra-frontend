@@ -22,11 +22,21 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-
   scrollBehavior(to, from, savedPosition) {
+
+    if (to.hash) {
+      return {
+        el: to.hash,
+        behavior: 'smooth',
+        top: 100,
+      }
+    }
+    
     if (savedPosition) {
       return savedPosition;
-    } else {
+    } 
+    
+    else {
       return { top: 0, behavior: 'smooth' };
     }
   }

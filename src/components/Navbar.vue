@@ -37,12 +37,11 @@ onUnmounted(() => {
       </router-link>
 
       <nav class="hidden md:flex items-center gap-8">
-        <a href="#proyek" class="text-[0.95rem] font-medium text-brand-muted hover:text-brand-accent transition-colors">Proyek</a>
-        <a href="#artikel" class="text-[0.95rem] font-medium text-brand-muted hover:text-brand-accent transition-colors">Artikel</a>
-        
-        <a href="#kontak" class="bg-brand-main hover:bg-brand-accent text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
+        <router-link :to="{ path: '/', hash: '#proyek' }" class="text-[0.95rem] font-medium text-brand-muted hover:text-brand-accent transition-colors">Proyek</router-link>
+        <router-link :to="{ path: '/', hash: '#artikel' }" class="text-[0.95rem] font-medium text-brand-muted hover:text-brand-accent transition-colors">Artikel</router-link>
+        <router-link :to="{ path: '/', hash: '#kontak' }" class="bg-brand-main hover:bg-brand-accent text-white px-5 py-2.5 rounded-full text-sm font-semibold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
           Kolaborasi
-        </a>
+        </router-link>
       </nav>
 
       <button @click="toggleMobileMenu" class="md:hidden text-brand-main focus:outline-none p-1">
@@ -68,11 +67,11 @@ onUnmounted(() => {
         v-show="isMobileMenuOpen" 
         class="md:hidden absolute top-full left-0 w-full bg-white border-b border-brand-border shadow-lg py-4 px-6 flex flex-col gap-4 origin-top"
       >
-        <a href="#proyek" @click="isMobileMenuOpen = false" class="text-brand-main font-medium hover:text-brand-accent py-2 border-b border-brand-border/50">Proyek</a>
-        <a href="#artikel" @click="isMobileMenuOpen = false" class="text-brand-main font-medium hover:text-brand-accent py-2 border-b border-brand-border/50">Artikel</a>
-        <a href="#kontak" @click="isMobileMenuOpen = false" class="text-center bg-brand-main text-white px-5 py-3 rounded-lg text-sm font-semibold mt-2 active:bg-brand-accent">
+        <router-link :to="{ path: '/', hash: '#proyek' }" @click="isMobileMenuOpen = false" class="text-brand-main font-medium hover:text-brand-accent py-2 border-b border-brand-border/50">Proyek</router-link>
+        <router-link :to="{ path: '/', hash: '#artikel' }" @click="isMobileMenuOpen = false" class="text-brand-main font-medium hover:text-brand-accent py-2 border-b border-brand-border/50">Artikel</router-link>
+        <router-link :to="{ path: '/', hash: '#kontak' }" @click="isMobileMenuOpen = false" class="text-center bg-brand-main text-white px-5 py-3 rounded-lg text-sm font-semibold mt-2 active:bg-brand-accent">
           Kolaborasi
-        </a>
+        </router-link>
       </div>
     </transition>
   </header>

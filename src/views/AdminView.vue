@@ -2,6 +2,8 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router' 
 import axios from 'axios'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
 
 const router = useRouter() 
 
@@ -280,7 +282,17 @@ onMounted(fetchData)
                 <div class="space-y-1.5"><label class="text-xs font-bold uppercase text-brand-muted">URL Demo</label><input v-model="projectForm.demo_url" type="text" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 outline-none"></div>
               </div>
               <div class="space-y-1.5"><label class="text-xs font-bold uppercase text-brand-muted">Galeri (Koma)</label><textarea v-model="projectForm.gallery" rows="2" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 outline-none"></textarea></div>
-              <div class="space-y-1.5"><label class="text-xs font-bold uppercase text-brand-muted">Deskripsi Lengkap</label><textarea v-model="projectForm.description" rows="4" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 outline-none" required></textarea></div>
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold uppercase text-brand-muted">Deskripsi Lengkap</label>
+                <div class="bg-white border border-brand-border rounded-xl overflow-hidden">
+                  <QuillEditor 
+                    theme="snow" 
+                    v-model:content="projectForm.description" 
+                    contentType="html" 
+                    class="min-h-[250px] text-base"
+                  />
+                </div>
+              </div>
               <div class="flex items-center gap-3 p-4 bg-blue-50/50 rounded-xl border border-blue-100">
                 <input v-model="projectForm.is_featured" type="checkbox" id="is_featured" class="w-5 h-5 accent-brand-accent">
                 <label for="is_featured" class="text-sm font-medium text-brand-main">Tampilkan di Hero Section</label>
@@ -299,8 +311,18 @@ onMounted(fetchData)
               </div>
               <div class="space-y-1.5"><label class="text-xs font-bold uppercase text-brand-muted">URL Thumbnail</label><input v-model="articleForm.image_url" type="text" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 outline-none"></div>
               <div class="space-y-1.5"><label class="text-xs font-bold uppercase text-brand-muted">Ringkasan Pendek</label><textarea v-model="articleForm.excerpt" rows="2" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 outline-none" required></textarea></div>
-              <div class="space-y-1.5"><label class="text-xs font-bold uppercase text-brand-muted">Konten Artikel</label><textarea v-model="articleForm.content" rows="6" class="w-full bg-gray-50 border border-brand-border rounded-xl p-3 outline-none" required></textarea></div>
-              
+              <div class="space-y-1.5">
+                <label class="text-xs font-bold uppercase text-brand-muted">Konten Artikel</label>
+                
+                <div class="bg-white border border-brand-border rounded-xl overflow-hidden">
+                  <QuillEditor 
+                    theme="snow" 
+                    v-model:content="articleForm.content" 
+                    contentType="html" 
+                    class="min-h-[300px] text-base"
+                  />
+                </div>
+              </div>
               <div class="flex gap-4">
                 <button type="submit" class="flex-1 py-4 bg-brand-accent text-white font-bold rounded-xl hover:bg-brand-hover shadow-lg transition-all">{{ isEditArticleMode ? 'Update Artikel' : 'Terbitkan Sekarang' }}</button>
                 <button v-if="isEditArticleMode" type="button" @click="cancelArticleEdit" class="px-8 py-4 bg-gray-200 text-gray-700 font-bold rounded-xl hover:bg-gray-300">Batal</button>
