@@ -112,8 +112,7 @@ onUnmounted(() => {
         <div class="lg:col-span-2 space-y-12">
           <section>
             <h2 class="text-2xl font-bold text-brand-main mb-6">Tentang Proyek</h2>
-            <div class="text-brand-muted leading-relaxed whitespace-pre-line text-lg">
-              {{ project.description }}
+            <div class="prose prose-lg max-w-none text-brand-muted leading-relaxed" v-html="project.description">
             </div>
           </section>
 
