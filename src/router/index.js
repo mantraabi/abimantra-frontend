@@ -6,6 +6,7 @@ import ProjectDetailView from '../views/ProjectDetailView.vue'
 import ArticlesView from '../views/ArticlesView.vue'
 import ArticleDetailView from '../views/ArticleDetailView.vue'
 import ProjectsView from '../views/ProjectsView.vue'
+import NotFoundView from '../views/NotFoundView.vue'
 
 
 
@@ -16,7 +17,8 @@ const routes = [
   { path: '/proyek/:slug', name: 'project-detail', component: ProjectDetailView},
   { path: '/artikel', name: 'articles', component: ArticlesView },
   { path: '/artikel/:slug', name: 'article-detail', component: ArticleDetailView },
-  { path: '/admin', name: 'admin', component: AdminView, meta: { requiresAuth: true } }
+  { path: '/admin', name: 'admin', component: AdminView, meta: { requiresAuth: true } },
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView }
 ]
 
 const router = createRouter({
