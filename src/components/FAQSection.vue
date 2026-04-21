@@ -3,28 +3,28 @@ import { ref } from 'vue'
 
 const faqs = ref([
   {
-    question: "Apakah sekolah kami harus memiliki tim IT khusus?",
-    answer: "Tidak perlu. Jika Anda memilih 'Paket Terima Beres', semua urusan infrastruktur, server, keamanan, hingga domain akan kami kelola sepenuhnya. Anda tinggal terima akses login.",
+    question: "Apakah sekolah harus menyiapkan server dan tim IT sendiri?",
+    answer: "Sama sekali tidak. Sistem kami berbasis Cloud SaaS (Terima Beres). Kami yang menyediakan Dedicated VPS, mengatur konfigurasi keamanan, dan merawat servernya. Pihak sekolah hanya perlu menyiapkan soal ujian dan siswa tinggal login menggunakan HP/Laptop masing-masing.",
+    isOpen: false
+  },
+  {
+    question: "Apa maksud dari skema pembayaran sewa 'Per Event'?",
+    answer: "Sistem Per Event berarti sekolah hanya membayar saat sedang ada kegiatan saja (misalnya masa PPDB atau musim ujian UTS/UAS). Masa aktif server adalah 30 hari. Ini sangat menghemat anggaran karena Anda tidak perlu membayar biaya langganan bulanan di saat aplikasi sedang tidak dipakai.",
+    isOpen: false
+  },
+  {
+    question: "Apakah server dijamin tidak akan down saat ujian serentak?",
+    answer: "Kami menerapkan arsitektur '1 Sekolah 1 Server (VPS)'. Artinya, beban trafik dan data sekolah Anda tidak dicampur dengan sekolah lain. Hal ini menjamin performa yang jauh lebih stabil dan anti-lag meskipun ratusan siswa Anda login dan menekan tombol di detik yang sama.",
     isOpen: false
   },
   {
     question: "Untuk alamat website (domain) menggunakan apa?",
-    answer: "Khusus Paket Terima Beres, kami menyediakan subdomain gratis (contoh: sekolahanda.abimantra.my.id). Namun, jika sekolah sudah memiliki domain resmi .sch.id sendiri, kami juga bisa membantu menghubungkannya ke sistem kami.",
+    answer: "Kami menyediakan subdomain khusus secara gratis untuk setiap sekolah (contoh: ujian.smpn1.id). Namun, jika sekolah Anda sudah memiliki domain resmi .sch.id sendiri, kami akan dengan senang hati membantu menghubungkannya ke sistem tanpa biaya tambahan.",
     isOpen: false
   },
   {
-    question: "Berapa lama proses pemasangan sistem ini?",
-    answer: "Untuk Jasa Instalasi maupun Paket Terima Beres, sistem biasanya sudah siap digunakan secara online dalam waktu 1-2 x 24 jam kerja setelah semua data sekolah kami terima.",
-    isOpen: false
-  },
-  {
-    question: "Apa bedanya beli 'Source Code' dengan paket lainnya?",
-    answer: "Membeli Source Code berarti Anda mendapatkan file mentah aplikasi. Ini cocok jika sekolah ingin mengembangkan fitur sendiri. Namun, kami tidak memberikan bantuan teknis pemasangan server untuk paket ini.",
-    isOpen: false
-  },
-  {
-    question: "Bagaimana jika terjadi kendala saat pelaksanaan ujian?",
-    answer: "Kami memberikan bantuan teknis prioritas. Khusus pengguna Paket Terima Beres, kami melakukan monitoring server secara intensif selama masa ujian untuk menjamin kelancaran sistem Anda.",
+    question: "Bagaimana jika ada masalah teknis di tengah pelaksanaan ujian?",
+    answer: "Kami memberikan pendampingan teknis (standby support) prioritas via WhatsApp selama hari-H pelaksanaan ujian. Tim kami akan terus memantau beban memori server Anda dari belakang layar untuk memastikan ujian berjalan tanpa hambatan.",
     isOpen: false
   }
 ])
@@ -47,7 +47,7 @@ const toggleFaq = (index) => {
       <p class="text-brand-muted max-w-2xl mx-auto">Jawaban singkat untuk keraguan Anda sebelum memulai kerja sama dengan kami.</p>
     </div>
 
-    <div class="max-w-3xl mx-auto space-y-4">
+    <div class="max-w-3xl mx-auto space-y-4 px-4">
       <div v-for="(faq, idx) in faqs" :key="idx" 
            class="bg-white border border-brand-border rounded-2xl overflow-hidden transition-all duration-300 hover:border-brand-accent/50 shadow-sm">
         

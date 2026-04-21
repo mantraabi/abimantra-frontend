@@ -7,6 +7,7 @@ import ArticlesView from '../views/ArticlesView.vue'
 import ArticleDetailView from '../views/ArticleDetailView.vue'
 import ProjectsView from '../views/ProjectsView.vue'
 import NotFoundView from '../views/NotFoundView.vue'
+import CBTServiceView from '../views/CBTServiceView.vue'
 
 
 
@@ -18,7 +19,8 @@ const routes = [
   { path: '/artikel', name: 'articles', component: ArticlesView },
   { path: '/artikel/:slug', name: 'article-detail', component: ArticleDetailView },
   { path: '/admin', name: 'admin', component: AdminView, meta: { requiresAuth: true } },
-  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView }
+  { path: '/:pathMatch(.*)*', name: 'not-found', component: NotFoundView },
+  { path: '/layanan/cbt', name: 'cbt-service', component: CBTServiceView }
 ]
 
 const router = createRouter({
